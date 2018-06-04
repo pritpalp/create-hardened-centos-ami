@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become: yes
+  #########
+  # The playbook needs to run as sudo, so we use 'become'
+  roles:
+  #########
+  # We run these roles that have been installed via ansible-galaxy in the packer template
+  # More info on the roles: 
+  #   https://github.com/dev-sec/ansible-os-hardening
+  #   https://github.com/dev-sec/ansible-ssh-hardening
+    - dev-sec.os-hardening
+    - dev-sec.ssh-hardening

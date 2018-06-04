@@ -1,0 +1,56 @@
+{
+  "_comment": "Set up the variables we are going to use to build the ami",
+  "variables": {
+    "aws_region": "eu-west-2",
+    "ec2_instance": "t2.micro",
+    "ami_to_search_for": "CentOS Linux 7 x86_64 HVM EBS *",
+    "ami_virtulisation_type": "hvm",
+    "ami_device_type": "ebs",
+    "username": "centos",
+    "ami_name": "CentOS 7 Hardened AMI",
+    "ami_tag": "CentOS 7 Hardend"
+  },
+  "_comment": "We search for the latest official CentOS 7 image and build our ami with that",
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "{{user `aws_region`}}",
+    "source_ami_filter": {
+      "filters": {
+        "virtualization-type": "{{user `ami_virtulisation_type`}}",
+        "name": "{{user `ami_to_search_for`}}",
+        "root-device-type": "{{user `ami_device_type`}}"
+      },
+      "owners": [
+        "679593333241"
+      ],
+      "most_recent": "true"
+    },
+    "instance_type": "{{user `ec2_instance`}}",
+    "ssh_username": "{{user `username`}}",
+    "ami_name": "{{user `ami_name`}}-{{isotime | clean_ami_name}}",
+    "ami_description": "EC2 Image",
+    "tags": {
+      "name": "{{user `ami_tag`}}"
+    }
+  }],
+  "_comment": "Provisioners here install updates to the image and then install the os, ssh hardening libraries using ansible-galaxy, the ansible script then calls them",
+  "provisioners": [{
+    "type": "shell",
+    "inline": [
+      "sudo yum -y upgrade",
+      "echo Updates applied",
+      "sudo yum install -y epel-release wget curl ansible",
+      "echo Installed epel-releasem wget, curl, ansible",
+      "sudo ansible-galaxy install dev-sec.os-hardening -vvv",
+      "sudo ansible-galaxy install dev-sec.ssh-hardening"
+    ]
+  },
+  {
+    "type": "ansible-local",
+    "playbook_file": "harden.yml",
+    "staging_directory": "/home/centos/ansible"
+  }
+  ]
+}
