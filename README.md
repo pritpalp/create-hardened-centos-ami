@@ -1,0 +1,1 @@
+# create-hardened-centos-ami
