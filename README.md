@@ -7,9 +7,13 @@ This repo contains an example [Packer](https://www.packer.io) template and [Ansi
  * https://github.com/dev-sec/ansible-ssh-hardening
 
 The JSON file used is used by Packer to create the ami and upload it to your Amazon account.
+
 Packer will use the variables in the top section of the JSON to find and create an ami based on the values it finds.
+
 The last section of the JSON will update the ami with the newest updates it finds and install Ansible.
-_ansible-galaxy_ is used to install the two repo's above ready for Ansible to call the roles.
+
+__ansible-galaxy__ is used to install the two repo's above ready for Ansible to call the roles.
+
 _harden.yml_ is a simple Ansible playbook to run the roles on the ami
 
 ## Prerequisites
@@ -17,7 +21,8 @@ _harden.yml_ is a simple Ansible playbook to run the roles on the ami
  * Packer
  * Ansible
 
-You need to have logged in via the Amazon CLI, the template will pick up the credentials from the ~/.aws/credentials file. Packer needs to be installed as well, and you can add Ansible too to play with.
+You need to have logged in via the Amazon CLI, the template will pick up the credentials from the ~/.aws/credentials file. 
+Packer needs to be installed as well, and you can add Ansible too to play with.
 
 ## To Run:
 Checkout the repo and edit as needed, then:
